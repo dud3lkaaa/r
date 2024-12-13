@@ -1,123 +1,62 @@
 let coins = 0;
-let energy = 100;
 let clickPower = 1;
 let incomePerMinute = 0;
-
-// Отключаем зум при двойном тапе
-document.addEventListener('touchmove', function (event) {
-    if (event.scale !== 1) { event.preventDefault(); }
-}, { passive: false });
+let dropInterval = 60; // seconds
+let dropTimer;
 
 function tap() {
-    if (energy > 0) {
-        coins += clickPower;
-        energy -= 1;
-        updateUI();
-        
-        // Анимация тряски хомяка
-        const hamster = document.getElementById('hamsterBtn');
-        hamster.classList.add('shake');
-        setTimeout(() => {
-            hamster.classList.remove('shake');
-        }, 100);
-    }
+    coins += clickPower;
+    updateDisplay();
 }
-const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-    manifestUrl: 'https://yourwebsite.com/tonconnect-manifest.json',
-    buttonRootId: 'ton-connect-btn'
-});
 
-async function connectTonWallet() {
-    try {
-        const wallet = await tonConnectUI.connectWallet();
-        
-        if (wallet) {
-            document.getElementById('wallet-not-connected').classList.add('hidden');
-            document.getElementById('wallet-connected').classList.remove('hidden');
-            
-            // Получаем адрес кошелька
-            const address = wallet.account.address;
-            document.getElementById('wallet-address').textContent = 
-                `${address.slice(0, 6)}...${address.slice(-4)}`;
-            
-            // Здесь можно получить баланс, но это требует дополнительной логики
-        }
-    } catch (error) {
-        console.error('TON Wallet Connection Error:', error);
-        alert('Не удалось подключить кошелек');
-    }
-}
 function upgradeClick() {
-    const cost = 10 * clickPower;
-    if (coins >= cost) {
-        coins -= cost;
-        clickPower += 1;
-        updateUI();
+    if (coins >= 10) {
+        coins -= 10;
+        clickPower++;
+        updateDisplay();
     }
 }
 
 function upgradeIncome() {
-    const cost = 50 * (incomePerMinute + 1);
-    if (coins >= cost) {
-        coins -= cost;
-        incomePerMinute += 1;
-        updateUI();
+    if (coins >= 50) {
+        coins -= 50;
+        incomePerMinute++;
+        updateDisplay();
     }
 }
 
-function updateUI() {
-    document.getElementById('coins').textContent = coinsdocument.getElementById('energy').textContent = energy;
-    document.getElementById('clickPower').textContent = clickPower;
-    document.getElementById('incomePerMinute').textContent = incomePerMinute;
-    
-    document.getElementById('clickUpgradeCost').textContent = 10 * clickPower;
-    document.getElementById('incomeUpgradeCost').textContent = 50 * (incomePerMinute + 1);
+function showTab(tab) {
+    const tabs = document.querySelectorAll('.tab-content');
+    tabs.forEach(t => t.classList.remove('active'));
+    document.getElementById(tab + 'Tab').classList.add('active');
 }
 
-function showTab(tabName) {
-    const tabs = ['tap', 'upgrade', 'drop'];
-    tabs.forEach(tab => {
-        const tabElement = document.getElementById(`${tab}Tab`);
-        tabElement.classList.toggle('hidden', tab !== tabName);
-    });
+function updateDisplay() {
+    document.getElementById('coins').innerText = coins;
+    document.getElementById('clickPower').innerText = clickPower;
+    document.getElementById('incomePerMinute').innerText = incomePerMinute;
 }
 
-// Восстановление энергии
-setInterval(() => {
-    if (energy < 100) {
-        energy = Math.min(100, energy + 1);
-        updateUI();
-    }
-}, 1000);
-
-// Доход в минуту
-setInterval(() => {
-    coins += incomePerMinute;
-    updateUI();
-}, 1000);
-
-// Обновление таймера дропа
-function updateDropTimer() {
-    const now = new Date();
-    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-    const diff = tomorrow - now;
-
-    const hours = Math.floor(diff / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    document.getElementById('dropTimer').textContent = 
-        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+function startDropTimer() {
+    let timeLeft = dropInterval;
+    dropTimer = setInterval(() => {
+        if (timeLeft <= 0) {
+            clearInterval(dropTimer);
+            alert("Дроп получен!");
+            timeLeft = dropInterval; // Reset timer
+        } else {
+            timeLeft--;
+            document.getElementById('dropTimer').innerText = formatTime(timeLeft);
+        }
+    }, 1000);
 }
 
-setInterval(updateDropTimer, 6400);
-updateDropTimer();
+function formatTime(seconds) {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
 
-
-// Добавим обработчик события на отключение кошелька
-tonConnectUI.onStatusChange(async (wallet) => {
-    if (!wallet) {
-        document.getElementById('wallet-not-connected').classList.remove('hidden');
-        document.getElementById('wallet-connected').classList.add('hidden');
-    }
-});
+// Start the drop timer when the page loads
+window.onload = startDropTimer;
