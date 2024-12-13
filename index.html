@@ -1,13 +1,106 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
-    <title>Telegram Mini App</title>
+    <title>Login Page</title>
+    <script src="https://telegram.org/js/telegram-widget.js?22" async></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 300px;
+        }
+        .container h1 {
+            margin-bottom: 20px;
+        }
+        .input-field {
+            margin-bottom: 10px;
+        }
+        .input-field input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Добро пожаловать в Telegram Mini App</h1>
-    <script src="script.js"></script>
+    <div class="container">
+        <h1>Login</h1>
+
+        <!-- Telegram Login -->
+        <div id="telegram-login"></div>
+        <script>
+            TelegramLoginWidget = document.getElementById('telegram-login');
+            TelegramLoginWidget.innerHTML = '<script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="your_bot_username" data-size="large" data-radius="10" data-auth-url="/auth/telegram" data-request-access="write">'
+                </script>';
+        </script>
+
+        <hr>
+
+        <!-- Phone Login -->
+        <div class="input-field">
+            <input type="tel" id="phone" placeholder="Enter your phone number" aria-label="Phone number">
+        </div>
+        <div class="input-field">
+            <input type="text" id="code" placeholder="Enter verification code" aria-label="Verification code">
+        </div>
+        <div class="input-field" id="password-field" style="display:none;">
+            <input type="password" id="password" placeholder="Enter your password" aria-label="Password">
+        </div>
+        <button class="btn" onclick="loginWithPhone()">Login</button>
+
+        <script>
+            function loginWithPhone() {
+                const phone = document.getElementById('phone').value;
+                const code = document.getElementById('code').value;
+                const passwordField = document.getElementById('password-field');
+                const password = document.getElementById('password').value;
+
+                if (phone && code) {
+                    alert('Logging in with phone: ' + phone + (password ? ` and password: ${password}` : ''));
+                } else {
+                    alert('Please enter both phone number and verification code.');
+                }
+            }
+
+            document.getElementById('phone').addEventListener('input', () => {
+                const passwordField = document.getElementById('password-field');
+                const phone = document.getElementById('phone').value;
+
+                // Show password field if necessary (mock condition)
+                if (phone && phone.startsWith('+1')) { // Example condition
+                    passwordField.style.display = 'block';
+                } else {
+                    passwordField.style.display = 'none';
+                }
+            });
+        </script>
+    </div>
 </body>
 </html>
