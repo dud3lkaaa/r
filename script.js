@@ -1,62 +1,58 @@
-let coins = 0;
-let clickPower = 1;
-let incomePerMinute = 0;
-let dropInterval = 60; // seconds
-let dropTimer;
+let score = 0;
+let passiveIncome = 0;
+const scoreDisplay = document.getElementById('score');
+const tapButton = document.getElementById('tapButton');
+const messageDisplay = document.getElementById('message');
+const buyPassiveButton = document.getElementById('buyPassiveButton');
+const passiveIncomeDisplay = document.getElementById('passiveIncome');
+const claimDropButton = document.getElementById('claimDropButton');
+const dropMessageDisplay = document.getElementById('dropMessage');
 
-function tap() {
-    coins += clickPower;
-    updateDisplay();
-}
-
-function upgradeClick() {
-    if (coins >= 10) {
-        coins -= 10;
-        clickPower++;
-        updateDisplay();
-    }
-}
-
-function upgradeIncome() {
-    if (coins >= 50) {
-        coins -= 50;
-        incomePerMinute++;
-        updateDisplay();
-    }
-}
-
-function showTab(tab) {
-    const tabs = document.querySelectorAll('.tab-content');
-    tabs.forEach(t => t.classList.remove('active'));
-    document.getElementById(tab + 'Tab').classList.add('active');
-}
-
-function updateDisplay() {
-    document.getElementById('coins').innerText = coins;
-    document.getElementById('clickPower').innerText = clickPower;
-    document.getElementById('incomePerMinute').innerText = incomePerMinute;
-}
-
-function startDropTimer() {
-    let timeLeft = dropInterval;
-    dropTimer = setInterval(() => {
-        if (timeLeft <= 0) {
-            clearInterval(dropTimer);
-            alert("Дроп получен!");
-            timeLeft = dropInterval; // Reset timer
-        } else {
-            timeLeft--;
-            document.getElementById('dropTimer').innerText = formatTime(timeLeft);
-        }
+tapButton.addEventListener('click ', () => {
+    score++;
+    scoreDisplay.textContent = score;
+    messageDisplay.textContent = "Ты нажал на кнопку!";
+    
+    setTimeout(() => {
+        messageDisplay.textContent = "";
     }, 1000);
-}
+});
 
-function formatTime(seconds) {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-}
+buyPassiveButton.addEventListener('click', () => {
+    if (score >= 10) { // Цена пассивного дохода
+        score -= 10;
+        passiveIncome++;
+        scoreDisplay.textContent = score;
+        passiveIncomeDisplay.textContent = passiveIncome;
+        messageDisplay.textContent = "Пассивный доход куплен!";
+        
+        setTimeout(() => {
+            messageDisplay.textContent = "";
+        }, 1000);
+    } else {
+        messageDisplay.textContent = "Недостаточно очков!";
+        setTimeout(() => {
+            messageDisplay.textContent = "";
+        }, 1000);
+    }
+});
 
-// Start the drop timer when the page loads
-window.onload = startDropTimer;
+claimDropButton.addEventListener('click', () => {
+    dropMessageDisplay.textContent = "Ты забрал дроп!";
+    setTimeout(() => {
+        dropMessageDisplay.textContent = "";
+    }, 1000);
+});
+
+// Переключение вкладок
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.content > div');
+
+tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        const target = tab.id.replace('Tab', '');
+        contents.forEach(content => {
+            content.style.display = content.classList.contains(target.toLowerCase()) ? 'block' : 'none';
+        });
+    });
+});

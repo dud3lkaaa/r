@@ -1,89 +1,71 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: #fff; /* Общий цвет текста */
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
+    background-color: #f0f0f0;
+    font-family: Arial, sans-serif;
 }
 
-.game-container {
-    width: 100%;
-    max-width: 400px;
-    background: #fff;
-    border-radius: 20px;
+.container {
+    width: 90%;
+    max-width: 600px;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
 }
 
-.header {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px;
+.tabs {
     display: flex;
-    justify-content: space-between;
-    color: #fff; /* Цвет текста в заголовке */
+    background-color: #4CAF50;
 }
 
-.content-wrapper {
-    flex-grow: 1;
+.tab {
+    flex: 1;
+    padding: 15px;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.tab:hover {
+    background-color: #45a049;
+}
+
+.content {
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
 }
 
-.hamster-container {
+h1 {
+    font-size: 2em;
     margin-bottom: 20px;
 }
 
-.hamster-container img {
-    width: 150px;
-    height: 150px;
+.score {
+    font-size: 1.5em;
+    margin-bottom: 20px;
+}
+
+.action-button {
+    padding: 15px 30px;
+    font-size: 1.5em;
     cursor: pointer;
-}
-
-.tap-stats {
-    text-align: center;
-    color: #333; /* Цвет текста в статистике */
-}
-
-.tap-stats p {
-    margin: 5px 0;
-}
-
-.tab-content {
-    display: none;
-}
-
-.tab-content.active {
-    display: block;
-}
-
-.bottom-navigation {
-    display: flex;
-    justify-content: space-around;
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px 0;
-}
-
-.nav-button {
-    background: transparent;
     border: none;
-    color: #fff; /* Цвет текста на кнопках */
-    cursor: pointer;
-    font-size: 16px;
-    transition: color 0.3s;
+    border-radius: 5px;
+    background-color: #4CAF50;
+    color: white;
+    transition: background-color 0.3s;
 }
 
-.nav-button:hover {
-    color: #667eea; /* Цвет текста при наведении */
+.action-button:hover {
+    background-color: #45a049;
+}
+
+.message, .drop-message {
+    margin-top: 20px;
+    font-size: 1.2em;
+    color: #ff0000;
 }
