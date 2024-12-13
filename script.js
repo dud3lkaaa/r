@@ -3,11 +3,23 @@ let energy = 100;
 let clickPower = 1;
 let incomePerMinute = 0;
 
+// Отключаем зум при двойном тапе
+document.addEventListener('touchmove', function (event) {
+    if (event.scale !== 1) { event.preventDefault(); }
+}, { passive: false });
+
 function tap() {
     if (energy > 0) {
         coins += clickPower;
         energy -= 1;
         updateUI();
+        
+        // Анимация тряски хомяка
+        const hamster = document.getElementById('hamsterBtn');
+        hamster.classList.add('shake');
+        setTimeout(() => {
+            hamster.classList.remove('shake');
+        }, 100);
     }
 }
 
@@ -30,8 +42,7 @@ function upgradeIncome() {
 }
 
 function updateUI() {
-    document.getElementById('coins').textContent = coins;
-    document.getElementById('energy').textContent = energy;
+    document.getElementById('coins').textContent = coins.document.getElementById('energy').textContent = energy;
     document.getElementById('clickPower').textContent = clickPower;
     document.getElementById('incomePerMinute').textContent = incomePerMinute;
     
@@ -69,8 +80,7 @@ function updateDropTimer() {
 
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000 
-    );
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
     document.getElementById('dropTimer').textContent = 
         `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
