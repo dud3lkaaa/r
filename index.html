@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Crypto Hamster</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="game-container">
@@ -14,54 +14,83 @@
             <div class="energy">⚡ Энергия: <span id="energy">100</span>/100</div>
         </div>
 
-        <div class="tabs">
-            <button onclick="showTab('tap')">Тап</button>
-            <button onclick="showTab('upgrade')">Прокачка</button>
-            <button onclick="showTab('drop')">Дроп</button>
-        </div>
-
-        <div id="tapTab" class="tab active">
-            <div class="hamster-container">
-                <img src="https://em-content.zobj.net/source/apple/354/hamster_1f439.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
-            </div>
-            <div class="tap-stats">
-                <p>Доход в минуту: <span id="incomePerMinute">0</span></p>
-                <p>Сила клика: <span id="clickPower">1</span></p>
-            </div>
-        </div>
-
-        <div id="upgradeTab" class="tab hidden">
-            <h2>Улучшения</h2>
-            <div class="upgrade-item">
-                <p>Сила клика</p>
-                <button onclick="upgradeClick()">Улучшить (+1 к клику)</button>
-                <p>Стоимость: <span id="clickUpgradeCost">10</span> монет</p>
-            </div>
-            <div class="upgrade-item">
-                <p>Доход в минуту</p>
-                <button onclick="upgradeIncome()">Улучшить (+1 к доходу)</button>
-                <p>Стоимость: <span id="incomeUpgradeCost">50</span> монет</p>
-            </div>
-        </div>
-
-        <div id="dropTab" class="tab hidden">
-            <h2>🎁 TON Кошелек</h2>
-            <div class="drop-info">
-                <div id="wallet-not-connected">
-                    <p>Подключите TON кошелек для участия в играх и получения наград</p>
-                    <button onclick="connectTonWallet()" class="ton-connect-btn">
-                        Подключить TON Wallet
-                    </button>
+        <div class="content-wrapper">
+            <div id="tapTab" class="tab active">
+                <div class="hamster-container">
+                    <img src="https://em-content.zobj.net/source/apple/354/hamster_1f439.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
                 </div>
-
-                <div id="wallet-connected" class="hidden">
-                    <p>Кошелек подключен:</p>
-                    <p id="wallet-address"></p>
-                    <div class="wallet-balance">
-                        <p>Баланс: <span id="ton-balance">0</span> TON</p>
+                <div class="tap-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Доход в минуту</span>
+                        <span id="incomePerMinute" class="stat-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Сила клика</span>
+                        <span id="clickPower" class="stat-value">1</span>
                     </div>
                 </div>
             </div>
+
+            <div id="upgradeTab" class="tab hidden">
+                <h2>Улучшения</h2>
+                <div class="upgrade-grid">
+                    <div class="upgrade-item">
+                        <div class="upgrade-content">
+                            <h3>Сила клика</h3>
+                            <p>Увеличивает доход за каждое нажатие</p>
+                            <div class="upgrade-action">
+                                <span class="cost">Стоимость: <span id="clickUpgradeCost">10</span> монет</span>
+                                <button onclick="upgradeClick()">Улучшить</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="upgrade-item">
+                        <div class="upgrade-content">
+                            <h3>Доход в минуту</h3>
+                            <p>Автоматический доход без нажатий</p>
+                            <div class="upgrade-action">
+                                <span class="cost">Стоимость: <span id="incomeUpgradeCost">50</span> монет</span>
+                                <button onclick="upgradeIncome()">Улучшить</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dropTab" class="tab hidden">
+                <h2>🎁 TON Кошелек</h2>
+                <div class="drop-info">
+                    <div id="wallet-not-connected">
+                        <p>Подключите TON кошелек для участия в играх</p>
+                        <button onclick="connectTonWallet()" class="ton-connect-btn">
+                            Подключить TON Wallet
+                        </button>
+                    </div>
+
+                    <div id="wallet-connected" class="hidden">
+                        <p>Кошелек подключен:</p>
+                        <p id="wallet-address" class="wallet-address"></p>
+                        <div class="wallet-balance">
+                            <p>Баланс: <span id="ton-balance">0</span> TON</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-navigation">
+            <button onclick="showTab('tap')" class="nav-btn">
+                <i class="icon">🖱️</i>
+                <span>Тап</span>
+            </button>
+            <button onclick="showTab('upgrade')" class="nav-btn">
+                <i class="icon">⚙️</i>
+                <span>Прокачка</span>
+            </button>
+            <button onclick="showTab('drop')" class="nav-btn">
+                <i class="icon">💎</i>
+                <span>Дроп</span>
+            </button>
         </div>
     </div>
 
