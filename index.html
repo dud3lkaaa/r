@@ -15,9 +15,13 @@
         </div>
 
         <div class="content-wrapper">
-            <div id="tapTab" class="tab active">
+            <div id="tapTab" class="tab-content active">
                 <div class="hamster-container">
-                    <img src="https://em-content.zobj.net/source/apple/354/hamster_1f439.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
+                    <img src="https://em-content.zobj.net/source/apple/354/hamster_1f439.png" 
+                         alt="Hamster" 
+                         id="hamsterBtn" 
+                         onclick="tap()"
+                         draggable="false">
                 </div>
                 <div class="tap-stats">
                     <div class="stat-item">
@@ -31,7 +35,7 @@
                 </div>
             </div>
 
-            <div id="upgradeTab" class="tab hidden">
+            <div id="upgradeTab" class="tab-content hidden">
                 <h2>Улучшения</h2>
                 <div class="upgrade-grid">
                     <div class="upgrade-item">
@@ -57,7 +61,7 @@
                 </div>
             </div>
 
-            <div id="dropTab" class="tab hidden">
+            <div id="dropTab" class="tab-content hidden">
                 <h2>🎁 TON Кошелек</h2>
                 <div class="drop-info">
                     <div id="wallet-not-connected">
@@ -79,17 +83,17 @@
         </div>
 
         <div class="bottom-navigation">
-            <button onclick="showTab('tap')" class="nav-btn">
-                <i class="icon">🖱️</i>
-                <span>Тап</span>
+            <button onclick="showTab('tap')" class="nav-button">
+                <span class="nav-icon">🖱️</span>
+                <span class="nav-text">Тап</span>
             </button>
-            <button onclick="showTab('upgrade')" class="nav-btn">
-                <i class="icon">⚙️</i>
-                <span>Прокачка</span>
+            <button onclick="showTab('upgrade')" class="nav-button">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Прокачка</span>
             </button>
-            <button onclick="showTab('drop')" class="nav-btn">
-                <i class="icon">💎</i>
-                <span>Дроп</span>
+            <button onclick="showTab('drop')" class="nav-button">
+                <span class="nav-icon">💎</span>
+                <span class="nav-text">Дроп</span>
             </button>
         </div>
     </div>
