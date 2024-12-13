@@ -1,111 +1,80 @@
-let mtproto; // Объявляем переменную mtproto
-let phone_code_hash; // Хранение phone_code_hash
+let coins = 0;
+let energy = 100;
+let clickPower = 1;
+let incomePerMinute = 0;
 
-async function checkApiHash() {
-    const api = document.getElementById('api').value;
-    const hash = document.getElementById('hash').value;
-
-    if (api && hash) {
-        // Инициализация mtproto
-        mtproto = new MTProto({
-            api_id: api,
-            api_hash: hash
-        });
-
-        mtproto.setDefaultDc(2);
-        mtproto.setConfig({
-            api_id: api,
-            api_hash: hash
-        });
-
-        document.getElementById('api-hash-form').classList.add('hidden');
-        document.getElementById('phone-form').classList.remove('hidden');
-    } else {
-        showMessage('Пожалуйста, введите API ID и Hash');
+function tap() {
+    if (energy > 0) {
+        coins += clickPower;
+        energy -= 1;
+        updateUI();
     }
 }
 
-async function sendCode() {
-    const phone = document.getElementById('phone').value;
-
-    if (phone) {
-        try {
-            const result = await mtproto.call('auth.sendCode', {
-                phone_number: phone,
-                settings: {
-                    _: 'codeSettings'
-                }
-            });
-
-            phone_code_hash = result.phone_code_hash; // Сохраняем phone_code_hash
-            document.getElementById('phone-form').classList.add('hidden');
-            document.getElementById('code-form').classList.remove('hidden');
-        } catch (error) {
-            console.error(error);
-            showMessage('Ошибка при отправке кода');
-        }
-    } else {
-        showMessage('Пожалуйста, введите номер телефона');
+function upgradeClick() {
+    const cost = 10 * clickPower;
+    if (coins >= cost) {
+        coins -= cost;
+        clickPower += 1;
+        updateUI();
     }
 }
 
-async function verifyCode() {
-    const code = document.getElementById('code').value;
-
-    if (code) {
-        try {
-            const result = await mtproto.call('auth.signIn', {
-                phone_number: document.getElementById('phone').value,
-                phone_code_hash: phone_code_hash,
-                phone_code: code
-            });
-
-            if (result._ === 'auth.authorizationSignUpRequired') {
-                showMessage('Требуется регистра ция. Пожалуйста, зарегистрируйтесь.');
-            } else {
-                document.getElementById('code-form').classList.add('hidden');
-                if (result.password) {
-                    document.getElementById('password-form').classList.remove('hidden');
-                } else {
-                    showMessage('Аутентификация успешна!');
-                }
-            }
-        } catch (error) {
-            console.error(error);
-            showMessage('Ошибка при проверке кода');
-        }
-    } else {
-        showMessage('Пожалуйста, введите код подтверждения');
+function upgradeIncome() {
+    const cost = 50 * (incomePerMinute + 1);
+    if (coins >= cost) {
+        coins -= cost;
+        incomePerMinute += 1;
+        updateUI();
     }
 }
 
-async function submitPassword() {
-    const password = document.getElementById('password').value;
+function updateUI() {
+    document.getElementById('coins').textContent = coins;
+    document.getElementById('energy').textContent = energy;
+    document.getElementById('clickPower').textContent = clickPower;
+    document.getElementById('incomePerMinute').textContent = incomePerMinute;
+    
+    document.getElementById('clickUpgradeCost').textContent = 10 * clickPower;
+    document.getElementById('incomeUpgradeCost').textContent = 50 * (incomePerMinute + 1);
+}
 
-    if (password) {
-        try {
-            const result = await mtproto.call('auth.checkPassword', {
-                password: {
-                    _: 'inputCheckPasswordEmpty'
-                }
-            });
+function showTab(tabName) {
+    const tabs = ['tap', 'upgrade', 'drop'];
+    tabs.forEach(tab => {
+        const tabElement = document.getElementById(`${tab}Tab`);
+        tabElement.classList.toggle('hidden', tab !== tabName);
+    });
+}
 
-            if (result._ === 'auth.authorization') {
-                showMessage('Аутентификация успешна!');
-            } else {
-                showMessage('Неверный пароль');
-            }
-        } catch (error) {
-            console.error(error);
-            showMessage('Ошибка при проверке пароля');
-        }
-    } else {
-        showMessage('Пожалуйста, введите пароль');
+// Восстановление энергии
+setInterval(() => {
+    if (energy < 100) {
+        energy = Math.min(100, energy + 1);
+        updateUI();
     }
+}, 1000);
+
+// Доход в минуту
+setInterval(() => {
+    coins += incomePerMinute;
+    updateUI();
+}, 1000);
+
+// Обновление таймера дропа
+function updateDropTimer() {
+    const now = new Date();
+    const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+    const diff = tomorrow - now;
+
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000 
+    );
+
+    document.getElementById('dropTimer').textContent = 
+        `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
-function showMessage(message) {
-    const messageDiv = document.getElementById('message');
-    messageDiv.innerText = message;
-    messageDiv.classList.remove('hidden');
-}
+setInterval(updateDropTimer, 1000);
+updateDropTimer();

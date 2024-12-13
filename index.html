@@ -1,43 +1,61 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Authentication App</title>
-    <link rel="stylesheet" href="styles.css"> <!-- Подключение CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Crypto Hamster</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <h2>Telegram Authentication</h2>
-        <div id="api-hash-form" class="form-group">
-            <label for="api">API ID</label>
-            <input type="text" id="api" placeholder="Enter API ID">
-            <label for="hash">API Hash</label>
-            <input type="text" id="hash" placeholder="Enter API Hash">
-            <button onclick="checkApiHash()">Submit</button>
+    <div class="game-container">
+        <div class="header">
+            <div class="balance">💰 Монеты: <span id="coins">0</span></div>
+            <div class="energy">⚡ Энергия: <span id="energy">100</span>/100</div>
         </div>
-        <div id="phone-form" class="form-group hidden">
-            <label for="phone">Phone Number</label>
-            <input type="text" id="phone" placeholder="Enter Phone Number">
-            <button onclick="sendCode()">Send Code</button>
+
+        <div class="tabs">
+            <button onclick="showTab('tap')">Тап</button>
+            <button onclick="showTab('upgrade')">Прокачка</button>
+            <button onclick="showTab('drop')">Дроп</button>
         </div>
-        <div id="code-form" class="form-group hidden">
-            <label for="code">Verification Code</label>
-            <input type="text" id="code" placeholder="Enter Verification Code">
-            <button onclick="verifyCode()">Verify Code</button>
+
+        <div id="tapTab" class="tab active">
+            <div class="hamster-container">
+                <img src="hamster.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
+            </div>
+            <div class="tap-stats">
+                <p>Доход в минуту: <span id="incomePerMinute">0</span></p>
+                <p>Сила клика: <span id="clickPower">1</span></p>
+            </div>
         </div>
-        <div id="password-form" class="form-group hidden">
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Enter Password">
-            <button onclick="submitPassword()">Submit</button>
+
+        <div id="upgradeTab" class="tab hidden">
+            <h2>Улучшения</h2>
+            <div class="upgrade-item">
+                <p>Сила клика</p>
+                <button onclick="upgradeClick()">Улучшить (+1 к клику)</button>
+                <p>Стоимость: <span id="clickUpgradeCost">10</span> монет</p>
+            </div>
+            <div class="upgrade-item">
+                <p>Доход в минуту</p>
+                <button onclick="upgradeIncome()">Улучшить (+1 к доходу)</button>
+                <p>Стоимость: <span id="incomeUpgradeCost">50</span> монет</p>
+            </div>
         </div>
-        <div id="message" class="message hidden"></div>
+
+        <div id="dropTab" class="tab hidden">
+            <h2>🎁 Дроп</h2>
+            <div class="drop-info">
+                <p>Скоро здесь появятся крутые награды!</p>
+                <p>Следите за обновлениями и копите монеты 💎</p>
+                <div class="countdown">
+                    <p>До следующего дропа:</p>
+                    <span id="dropTimer">24:00:00</span>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <script src="https://raw.githubusercontent.com/dud3lkaaa/r/master/node_modules/telegram-mtproto-javascript/dist/telegramApi.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

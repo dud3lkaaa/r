@@ -1,55 +1,92 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #f0f4f8;
+    margin: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
 }
-.container {
-    background-color: #fff;
+
+.game-container {
+    background-color: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    width: 350px;
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 300px;
-}
-.container h2 {
-    margin-bottom: 20px;
-    font-weight: 700;
     text-align: center;
 }
-.form-group {
-    margin-bottom: 15px;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
 }
-.form-group label {
-    display: block;
-    margin-bottom: 5px;
+
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
 }
-.form-group input {
-    width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-.form-group button {
-    width: 100%;
-    padding: 10px;
-    background-color: #007bff;
+
+.tabs button {
+    background-color: #e0e0e0;
     border: none;
-    border-radius: 4px;
-    color: #fff;
-    font-size: 16px;
+    padding: 10px 20px;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
-.form-group button:hover {
-    background-color: #0056b3;
+
+.tabs button:hover {
+    background-color: #c0c0c0;
 }
+
+.hamster-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.hamster-container img {
+    width: 200px;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.hamster-container img:active {
+    transform: scale(0.95);
+}
+
 .hidden {
     display: none;
 }
-.message {
-    text-align: center;
-    margin-top: 10px;
-    color: red;
+
+.upgrade-item {
+    background-color: #f0f0f0;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px 0;
+}
+
+.upgrade-item button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.drop-info {
+    background-color: #e6f2ff;
+    border-radius: 10px;
+    padding: 20px;
+}
+
+.countdown {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 15px;
 }
