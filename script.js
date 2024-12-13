@@ -1,8 +1,17 @@
+let mtproto; // Объявляем переменную mtproto
+
 async function checkApiHash() {
-    const api  = document.getElementById('api').value;
+    console.log("checkApiHash called");
+    const api = document.getElementById('api').value;
     const hash = document.getElementById('hash').value;
 
     if (api && hash) {
+        // Инициализация mtproto
+        mtproto = new MTProto({
+            api_id: api,
+            api_hash: hash
+        });
+
         mtproto.setDefaultDc(2);
         mtproto.setConfig({
             api_id: api,
