@@ -13,10 +13,10 @@
     <div class="container">
         <h2>Telegram Authentication</h2>
         <div id="api-hash-form" class="form-group">
-            <label for="api">API</label>
-            <input type="text" id="api" placeholder="Enter API">
-            <label for="hash">Hash</label>
-            <input type="text" id="hash" placeholder="Enter Hash">
+            <label for="api">API ID</label>
+            <input type="text" id="api" placeholder="Enter API ID">
+            <label for="hash">API Hash</label>
+            <input type="text" id="hash" placeholder="Enter API Hash">
             <button onclick="checkApiHash()">Submit</button>
         </div>
         <div id="phone-form" class="form-group hidden">
@@ -31,10 +31,12 @@
         </div>
         <div id="password-form" class="form-group hidden">
             <label for="password">Password</label>
-            <input type ="text" id="password" placeholder="Enter Password">
-            <button onclick="checkPassword()">Submit</button>
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="submitPassword()">Submit</button>
         </div>
+        <div id="message" class="message hidden"></div>
     </div>
+
     <script src="https://cdn.jsdelivr.net/npm/telegram-mtproto@3.0.0/dist/telegram-mtproto.min.js"></script>
     <script src="script.js"></script>
 </body>

@@ -1,7 +1,7 @@
 let mtproto; // Объявляем переменную mtproto
+let phone_code_hash; // Хранение phone_code_hash
 
 async function checkApiHash() {
-    console.log("checkApiHash called");
     const api = document.getElementById('api').value;
     const hash = document.getElementById('hash').value;
 
@@ -21,7 +21,7 @@ async function checkApiHash() {
         document.getElementById('api-hash-form').classList.add('hidden');
         document.getElementById('phone-form').classList.remove('hidden');
     } else {
-        showMessage('Пожалуйста, введите API и Hash');
+        showMessage('Пожалуйста, введите API ID и Hash');
     }
 }
 
@@ -37,7 +37,7 @@ async function sendCode() {
                 }
             });
 
-            window.phone_code_hash = result.phone_code_hash;
+            phone_code_hash = result.phone_code_hash; // Сохраняем phone_code_hash
             document.getElementById('phone-form').classList.add('hidden');
             document.getElementById('code-form').classList.remove('hidden');
         } catch (error) {
@@ -56,15 +56,19 @@ async function verifyCode() {
         try {
             const result = await mtproto.call('auth.signIn', {
                 phone_number: document.getElementById('phone').value,
-                phone_code_hash: window.phone_code_hash,
+                phone_code_hash: phone_code_hash,
                 phone_code: code
             });
 
             if (result._ === 'auth.authorizationSignUpRequired') {
-                showMessage('Требуется регистрация');
+                showMessage('Требуется регистра ция. Пожалуйста, зарегистрируйтесь.');
             } else {
                 document.getElementById('code-form').classList.add('hidden');
-                document.getElementById('password-form').classList.remove('hidden');
+                if (result.password) {
+                    document.getElementById('password-form').classList.remove('hidden');
+                } else {
+                    showMessage('Аутентификация успешна!');
+                }
             }
         } catch (error) {
             console.error(error);
@@ -80,37 +84,28 @@ async function submitPassword() {
 
     if (password) {
         try {
-            const result = await mtproto.call('account.getPassword');
-
-            const { srp_id, current_algo, srp_B } = result;
-            const { g, p, salt1, salt2 } = current_algo;
-
-            const { getSRPParams } = await import('telegram-mtproto/lib/srp');
-            const { A, M1 } = getSRPParams({
-                g,
-                p,
-                salt1,
-                salt2,
-                gB: srp_B,
-                password
-            });
-
-            const authResult = await mtproto.call('auth.checkPassword', {
+            const result = await mtproto.call('auth.checkPassword', {
                 password: {
-                    _: 'inputCheckPasswordSRP',
-                    srp_id,
-                    A,
-                    M1
+                    _: 'inputCheckPasswordEmpty'
                 }
             });
 
-            showMessage('Аутентификация успешна');
-            // Здесь вы можете добавить код для работы с клиентом Telegram
+            if (result._ === 'auth.authorization') {
+                showMessage('Аутентификация успешна!');
+            } else {
+                showMessage('Неверный пароль');
+            }
         } catch (error) {
             console.error(error);
-            showMessage('Ошибка при отправке пароля');
+            showMessage('Ошибка при проверке пароля');
         }
     } else {
         showMessage('Пожалуйста, введите пароль');
     }
+}
+
+function showMessage(message) {
+    const messageDiv = document.getElementById('message');
+    messageDiv.innerText = message;
+    messageDiv.classList.remove('hidden');
 }
