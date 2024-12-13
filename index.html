@@ -1,46 +1,43 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Page</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://telegram.org/js/telegram-widget.js?22" async></script>
+    <title>Telegram Authentication App</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Подключение CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="container">
-        <h1>Login</h1>
-
-        <!-- API & Hash Processing -->
-        <div id="api-processing">
-            <button class="btn" onclick="processApi()">Start API Processing</button>
+        <h2>Telegram Authentication</h2>
+        <div id="api-hash-form" class="form-group">
+            <label for="api">API</label>
+            <input type="text" id="api" placeholder="Enter API">
+            <label for="hash">Hash</label>
+            <input type="text" id="hash" placeholder="Enter Hash">
+            <button onclick="checkApiHash()">Submit</button>
         </div>
-
-        <!-- Phone Number -->
-        <div id="phone-step" style="display:none;">
-            <div class="input-field">
-                <input type="tel" id="phone" placeholder="Enter your phone number" aria-label="Phone number">
-            </div>
-            <button class="btn" onclick="sendCode()">Send Verification Code</button>
+        <div id="phone-form" class="form-group hidden">
+            <label for="phone">Phone Number</label>
+            <input type="text" id="phone" placeholder="Enter Phone Number">
+            <button onclick="sendCode()">Send Code</button>
         </div>
-
-        <!-- Verification Code -->
-        <div id="code-step" style="display:none;">
-            <div class="input-field">
-                <input type="text" id="code" placeholder="Enter verification code" aria-label="Verification code">
-            </div>
-            <button class="btn" onclick="verifyCode()">Verify Code</button>
+        <div id="code-form" class="form-group hidden">
+            <label for="code">Verification Code</label>
+            <input type="text" id="code" placeholder="Enter Verification Code">
+            <button onclick="verifyCode()">Verify Code</button>
         </div>
-
-        <!-- Password -->
-        <div id="password-step" style="display:none;">
-            <div class="input-field">
-                <input type="password" id="password" placeholder="Enter your password" aria-label="Password">
-            </div>
-            <button class="btn" onclick="loginWithPassword()">Login</button>
+        <div id="password-form" class="form-group hidden">
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Enter Password">
+            <button onclick="submitPassword()">Submit</button>
         </div>
-
-        <script src="script.js"></script>
+        <div id="message" class="message hidden"></div>
     </div>
-</body>
+
+    <script src="https://cdn.jsdelivr.net/npm/telegram-mtproto@3.0.0/dist/telegram-mtproto.min.js"></script>
+    <script src="script.js"></script> <!-- Подключение JavaScript -->
+    </body>
 </html>

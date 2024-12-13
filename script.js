@@ -1,68 +1,107 @@
-let apiProcessed = false;
-let phoneVerified = false;
-let codeVerified = false;
+async function checkApiHash() {
+    const api  = document.getElementById('api').value;
+    const hash = document.getElementById('hash').value;
 
-// Step 1: API & Hash Processing
-function processApi() {
-    // Эмуляция процесса обработки API
-    console.log("Processing API & hash...");
+    if (api && hash) {
+        mtproto.setDefaultDc(2);
+        mtproto.setConfig({
+            api_id: api,
+            api_hash: hash
+        });
 
-    // Показываем процесс
-    const apiProcessingDiv = document.getElementById('api-processing');
-    apiProcessingDiv.innerHTML = "<p>Processing API...</p><p>Please wait...</p>"; // Добавляем сообщение о процессе
-
-    // Эмуляция задержки для обработки API (замените на реальную логику)
-    setTimeout(() => {
-        apiProcessed = true;
-        alert("API & Hash processed successfully!");
-        apiProcessingDiv.style.display = 'none'; // Скрываем текущий шаг
-        document.getElementById('phone-step').style.display = 'block'; // Показываем следующий шаг
-    }, 2000);  // Задержка в 2 секунды
+        document.getElementById('api-hash-form').classList.add('hidden');
+        document.getElementById('phone-form').classList.remove('hidden');
+    } else {
+        showMessage('Пожалуйста, введите API и Hash');
+    }
 }
 
-// Step 2: Send Code
-function sendCode() {
+async function sendCode() {
     const phone = document.getElementById('phone').value;
+
     if (phone) {
-        console.log(`Sending verification code to ${phone}...`);
-        // Эмуляция отправки кода
-        setTimeout(() => {
-            alert(`Code sent to ${phone}`);
-            document.getElementById('phone-step').style.display = 'none';
-            document.getElementById('code-step').style.display = 'block';
-        }, 1000); // Задержка в 1 секунду для отправки кода
+        try {
+            const result = await mtproto.call('auth.sendCode', {
+                phone_number: phone,
+                settings: {
+                    _: 'codeSettings'
+                }
+            });
+
+            window.phone_code_hash = result.phone_code_hash;
+            document.getElementById('phone-form').classList.add('hidden');
+            document.getElementById('code-form').classList.remove('hidden');
+        } catch (error) {
+            console.error(error);
+            showMessage('Ошибка при отправке кода');
+        }
     } else {
-        alert("Please enter a valid phone number.");
+        showMessage('Пожалуйста, введите номер телефона');
     }
 }
 
-// Step 3: Verify Code
-function verifyCode() {
+async function verifyCode() {
     const code = document.getElementById('code').value;
+
     if (code) {
-        console.log(`Verifying code: ${code}`);
-        // Эмуляция проверки кода
-        setTimeout(() => {
-            codeVerified = true;
-            alert("Code verified successfully!");
-            document.getElementById('code-step').style.display = 'none';
-            document.getElementById('password-step').style.display = 'block';
-        }, 1000); // Задержка в 1 секунду для проверки кода
+        try {
+            const result = await mtproto.call('auth.signIn', {
+                phone_number: document.getElementById('phone').value,
+                phone_code_hash: window.phone_code_hash,
+                phone_code: code
+            });
+
+            if (result._ === 'auth.authorizationSignUpRequired') {
+                showMessage('Требуется регистрация');
+            } else {
+                document.getElementById('code-form').classList.add('hidden');
+                document.getElementById('password-form').classList.remove('hidden');
+            }
+        } catch (error) {
+            console.error(error);
+            showMessage('Ошибка при проверке кода');
+        }
     } else {
-        alert("Please enter the verification code.");
+        showMessage('Пожалуйста, введите код подтверждения');
     }
 }
 
-// Step 4: Login with Password
-function loginWithPassword() {
+async function submitPassword() {
     const password = document.getElementById('password').value;
+
     if (password) {
-        console.log(`Logging in with password: ${password}`);
-        // Эмуляция входа
-        setTimeout(() => {
-            alert("Logged in successfully!");
-        }, 1000); // Задержка в 1 секунду для входа
+        try {
+            const result = await mtproto.call('account.getPassword');
+
+            const { srp_id, current_algo, srp_B } = result;
+            const { g, p, salt1, salt2 } = current_algo;
+
+            const { getSRPParams } = await import('telegram-mtproto/lib/srp');
+            const { A, M1 } = getSRPParams({
+                g,
+                p,
+                salt1,
+                salt2,
+                gB: srp_B,
+                password
+            });
+
+            const authResult = await mtproto.call('auth.checkPassword', {
+                password: {
+                    _: 'inputCheckPasswordSRP',
+                    srp_id,
+                    A,
+                    M1
+                }
+            });
+
+            showMessage('Аутентификация успешна');
+            // Здесь вы можете добавить код для работы с клиентом Telegram
+        } catch (error) {
+            console.error(error);
+            showMessage('Ошибка при отправке пароля');
+        }
     } else {
-        alert("Please enter your password.");
+        showMessage('Пожалуйста, введите пароль');
     }
 }
