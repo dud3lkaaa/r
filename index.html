@@ -22,7 +22,7 @@
 
         <div id="tapTab" class="tab active">
             <div class="hamster-container">
-                <img src="hamster.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
+                <img src="https://em-content.zobj.net/source/apple/354/hamster_1f439.png" alt="Hamster" id="hamsterBtn" onclick="tap()">
             </div>
             <div class="tap-stats">
                 <p>Доход в минуту: <span id="incomePerMinute">0</span></p>
@@ -45,18 +45,27 @@
         </div>
 
         <div id="dropTab" class="tab hidden">
-            <h2>🎁 Дроп</h2>
+            <h2>🎁 TON Кошелек</h2>
             <div class="drop-info">
-                <p>Скоро здесь появятся крутые награды!</p>
-                <p>Следите за обновлениями и копите монеты 💎</p>
-                <div class="countdown">
-                    <p>До следующего дропа:</p>
-                    <span id="dropTimer">24:00:00</span>
+                <div id="wallet-not-connected">
+                    <p>Подключите TON кошелек для участия в играх и получения наград</p>
+                    <button onclick="connectTonWallet()" class="ton-connect-btn">
+                        Подключить TON Wallet
+                    </button>
+                </div>
+
+                <div id="wallet-connected" class="hidden">
+                    <p>Кошелек подключен:</p>
+                    <p id="wallet-address"></p>
+                    <div class="wallet-balance">
+                        <p>Баланс: <span id="ton-balance">0</span> TON</p>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@tonconnect/ui@2.0.0/dist/tonconnect-ui.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

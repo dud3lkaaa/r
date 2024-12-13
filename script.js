@@ -22,7 +22,31 @@ function tap() {
         }, 100);
     }
 }
+const tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
+    manifestUrl: 'https://yourwebsite.com/tonconnect-manifest.json',
+    buttonRootId: 'ton-connect-btn'
+});
 
+async function connectTonWallet() {
+    try {
+        const wallet = await tonConnectUI.connectWallet();
+        
+        if (wallet) {
+            document.getElementById('wallet-not-connected').classList.add('hidden');
+            document.getElementById('wallet-connected').classList.remove('hidden');
+            
+            // Получаем адрес кошелька
+            const address = wallet.account.address;
+            document.getElementById('wallet-address').textContent = 
+                `${address.slice(0, 6)}...${address.slice(-4)}`;
+            
+            // Здесь можно получить баланс, но это требует дополнительной логики
+        }
+    } catch (error) {
+        console.error('TON Wallet Connection Error:', error);
+        alert('Не удалось подключить кошелек');
+    }
+}
 function upgradeClick() {
     const cost = 10 * clickPower;
     if (coins >= cost) {
@@ -42,7 +66,7 @@ function upgradeIncome() {
 }
 
 function updateUI() {
-    document.getElementById('coins').textContent = coins.document.getElementById('energy').textContent = energy;
+    document.getElementById('coins').textContent = coinsdocument.getElementById('energy').textContent = energy;
     document.getElementById('clickPower').textContent = clickPower;
     document.getElementById('incomePerMinute').textContent = incomePerMinute;
     
@@ -86,5 +110,14 @@ function updateDropTimer() {
         `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
 }
 
-setInterval(updateDropTimer, 1000);
+setInterval(updateDropTimer, 6400);
 updateDropTimer();
+
+
+// Добавим обработчик события на отключение кошелька
+tonConnectUI.onStatusChange(async (wallet) => {
+    if (!wallet) {
+        document.getElementById('wallet-not-connected').classList.remove('hidden');
+        document.getElementById('wallet-connected').classList.add('hidden');
+    }
+});
